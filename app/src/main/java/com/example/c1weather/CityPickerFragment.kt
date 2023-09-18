@@ -12,21 +12,14 @@ class CityPickerFragment : Fragment() {
     private var _binding: FragmentCityPickerBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var textView: TextView
-
     // Fragment inflated in onCreateView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCityPickerBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        textView = binding.textView
-//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

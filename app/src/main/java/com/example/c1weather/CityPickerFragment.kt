@@ -27,8 +27,6 @@ class CityPickerFragment : Fragment() {
         recyclerView.adapter = CityAdapter(this, viewModel.cities)
         recyclerView.setHasFixedSize(true)
 
-        Log.d("TESTER", viewModel.cities[0].cityName)
-
         return binding.root
     }
 

@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">C1 Weather</string>
-    <string name="hello_world">Hello World</string>
+    <string name="city_picker_header">Weather App</string>
 </resources>

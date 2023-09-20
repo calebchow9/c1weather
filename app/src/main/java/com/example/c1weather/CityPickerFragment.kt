@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.c1weather.adapter.CityAdapter
 import com.example.c1weather.databinding.FragmentCityPickerBinding
 
 class CityPickerFragment : Fragment() {
@@ -20,6 +21,12 @@ class CityPickerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCityPickerBinding.inflate(inflater, container, false)
+
+        val recyclerView = binding.weatherRecyclerview
+        recyclerView.adapter = CityAdapter(this, viewModel.cities)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+
         return binding.root
     }
 

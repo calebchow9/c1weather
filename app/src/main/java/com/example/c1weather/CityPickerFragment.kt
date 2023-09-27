@@ -17,6 +17,7 @@ class CityPickerFragment : Fragment() {
     private var _binding: FragmentCityPickerBinding? = null
     private val binding get() = _binding!!
     private val viewModel: CityPickerViewModel by viewModels()
+    private lateinit var cityAdapter: CityAdapter
 
     // Fragment inflated in onCreateView
     override fun onCreateView(
@@ -25,12 +26,24 @@ class CityPickerFragment : Fragment() {
     ): View {
         _binding = FragmentCityPickerBinding.inflate(inflater, container, false)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         val recyclerView = binding.weatherRecyclerview
-        recyclerView.adapter = viewModel.cities.value?.let { CityAdapter(context, it) }
+        cityAdapter = CityAdapter(context)
+        recyclerView.adapter = cityAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
 
-        return binding.root
+        // observe LiveData for when list gets updated
+        viewModel.cities.observe(viewLifecycleOwner
+        ) {
+            Log.d("TESTER", "observer observed changes")
+            cityAdapter.updateWeatherData(it)
+        }
     }
 
     override fun onDestroyView() {

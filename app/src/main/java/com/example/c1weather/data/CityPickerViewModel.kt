@@ -7,17 +7,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.c1weather.citymodel.City
 import com.example.c1weather.network.WeatherApi
+import com.example.c1weather.network.WeatherData
 import com.example.c1weather.network.WeatherResponse
 import kotlinx.coroutines.launch
 
 class CityPickerViewModel : ViewModel() {
-    private val _cities = MutableLiveData<MutableList<WeatherResponse>>()
-    val cities: LiveData<MutableList<WeatherResponse>> = _cities
-
-
     // Use backing to protect private ViewModel variables
-    val cityNames: List<String>
-        get() = listOf("Chicago")
+    private val _cities = MutableLiveData<List<WeatherData>>()
+    val cities: LiveData<List<WeatherData>> = _cities
+
+    // McLean, LA, NYC, Chicago, Houston, Seattle, Honolulu, Denver, SF, Dallas, Portland, Detroit, NOLA
+    private val cityIds = listOf("4772454", "5368361", "5128581", "4887398", "4699066", "5809844", "5856195", "5419384", "5391959", "4684888", "5746545", "4990729", "4335024")
+    private val apiKey = "4467831206bb8b3056f38cba080844c0"
 
     init {
         getWeather()
@@ -26,16 +27,15 @@ class CityPickerViewModel : ViewModel() {
     private fun getWeather() {
         viewModelScope.launch {
             try {
-                for (city: String in cityNames) {
-                    // call GET endpoint
-                    val weatherResponseObject = WeatherApi.retrofitService.getWeather(city)
-                    Log.d("TESTER", "Success: Retrieved weather data for city $city")
-                    _cities.value?.add(weatherResponseObject)
-                }
-
+                val cityIdString = cityIds.joinToString()
+                // call GET endpoint
+                val weatherResponseObject = WeatherApi.retrofitService.getWeather(cityIdString, apiKey, "metric")
+                Log.d("TESTER", "Success: Retrieved weather data for city list $cityIdString.")
                 // add new WeatherResponse to our liveData list
+                _cities.value = weatherResponseObject.list
+
             } catch (e: Exception) {
-                 Log.e("ERROR", "Failure: ${e.message}")
+                 Log.e("ViewModel", "Failure: ${e.message}")
             }
         }
     }

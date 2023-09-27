@@ -7,7 +7,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-private const val BASE_URL = "https://api.weatherapi.com/v1/"
+private const val BASE_URL = "https://api.openweathermap.org/"
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
@@ -17,8 +17,8 @@ private val retrofit = Retrofit.Builder()
     .build()
 
 interface WeatherApiService {
-    @GET("forecast.json?key=1ff04fdbff754aa98de211053232209&days=1&aqi=no&alerts=no")
-    suspend fun getWeather(@Query("q") city: String): WeatherResponse
+    @GET("data/2.5/group")
+    suspend fun getWeather(@Query("id") cityIds: String, @Query("appid") key: String, @Query("units") units: String): WeatherResponse
 }
 
 object WeatherApi {

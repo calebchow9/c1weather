@@ -1,3 +1,3 @@
 package com.example.c1weather.citymodel
 
-data class City (val cityName: String)
+data class City (val cityName: String, var stateName: String?)

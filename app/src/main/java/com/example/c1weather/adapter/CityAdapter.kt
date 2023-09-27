@@ -1,18 +1,23 @@
 package com.example.c1weather.adapter
 
+import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.c1weather.CityPickerFragment
 import com.example.c1weather.R
 import com.example.c1weather.citymodel.City
+import com.example.c1weather.network.WeatherResponse
 
-class CityAdapter(private val context: CityPickerFragment, private val dataset: List<City>) : RecyclerView.Adapter<CityAdapter.CityViewHolder>() {
+class CityAdapter(private val context: Context?, private val dataset: MutableList<WeatherResponse>) : RecyclerView.Adapter<CityAdapter.CityViewHolder>() {
 
     class CityViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        val textView: TextView = view.findViewById(R.id.city_textView)
+        val cityTextView: TextView = view.findViewById(R.id.city_textView)
+        val stateTextView: TextView = view.findViewById(R.id.state_textView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityViewHolder {
@@ -25,7 +30,9 @@ class CityAdapter(private val context: CityPickerFragment, private val dataset: 
 
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
         val city = dataset[position]
-        holder.textView.text = city.cityName
+        Log.d("TESTER", city.toString())
+        holder.cityTextView.text = city.location.cityName
+        holder.stateTextView.text = city.location.stateName
     }
 
 }

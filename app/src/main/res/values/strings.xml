@@ -2,4 +2,5 @@
     <string name="app_name">C1 Weather</string>
     <string name="city_picker_header">Weather App</string>
     <string name="city_country">United States</string>
+    <string name="cloud_icon">Cloud icon</string>
 </resources>

@@ -30,18 +30,14 @@ class CityPickerFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
         val recyclerView = binding.weatherRecyclerview
         cityAdapter = CityAdapter(context)
         recyclerView.adapter = cityAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
-
         // observe LiveData for when list gets updated
         viewModel.cities.observe(viewLifecycleOwner
         ) {
-            Log.d("TESTER", "observer observed changes")
             cityAdapter.updateWeatherData(it)
         }
     }

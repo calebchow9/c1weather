@@ -39,7 +39,8 @@
             style="@style/Widget.C1Weather.TextViewHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="48sp"
+            android:textSize="54sp"
+            android:textStyle="normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/country_textView"
             tools:text="37°" />
@@ -49,22 +50,38 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/current_temp_textView">
+
             <TextView
                 android:id="@+id/min_max_temp_textView"
                 style="@style/Widget.C1Weather.TextView"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="32°/64°" />
+
+            <ImageView
+                android:id="@+id/cloud_imageView"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:layout_constraintEnd_toStartOf="@id/cloud_cover_textView"
+                app:layout_constraintTop_toBottomOf="@id/min_max_temp_textView"
+                app:srcCompat="@drawable/cloud_icon"
+                android:contentDescription="@string/cloud_icon" />
 
             <TextView
                 android:id="@+id/cloud_cover_textView"
                 style="@style/Widget.C1Weather.TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/min_max_temp_textView"
+                android:fontFamily="sans-serif-light"
+                android:textSize="28sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/min_max_temp_textView"
                 tools:text="0%" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

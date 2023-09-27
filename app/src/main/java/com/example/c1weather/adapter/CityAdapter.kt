@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.c1weather.R
 import com.example.c1weather.network.WeatherData
+import kotlin.math.roundToInt
 
 class CityAdapter(private val context: Context?, private var dataset: List<WeatherData> = listOf()) : RecyclerView.Adapter<CityAdapter.CityViewHolder>() {
 
@@ -34,22 +35,21 @@ class CityAdapter(private val context: Context?, private var dataset: List<Weath
 
     override fun getItemCount() = dataset.size
 
-    private fun convertCelsiusToFahrenheit(celsius: Double) : Double {
-        return (celsius * 9/5) + 32
+    private fun convertCelsiusToFahrenheit(celsius: Double) : Int {
+        return ((celsius * 9/5) + 32).roundToInt()
     }
 
-    private fun createMinMaxString(min: Double, max: Double): String {
-        return "$min° / $max°"
+    private fun createMinMaxString(min: Int, max: Int): String {
+        return "$min°/$max°"
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: CityViewHolder, position: Int) {
         val city = dataset[position]
-        Log.d("TESTER", city.name.toString())
         holder.cityTextView.text = city.name
         holder.currentTempTextView.text = "${convertCelsiusToFahrenheit(city.main.currentTemp)}°"
         holder.minMaxTempTextView.text = createMinMaxString(convertCelsiusToFahrenheit(city.main.minTemp), convertCelsiusToFahrenheit(city.main.maxTemp))
-        holder.cloudCoverTextView.text = "${city.clouds.cloudCover}%"
+        holder.cloudCoverTextView.text = "${city.clouds.cloudCover.roundToInt()}%"
 
     }
 

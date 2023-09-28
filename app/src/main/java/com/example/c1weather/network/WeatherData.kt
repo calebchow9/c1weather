@@ -1,7 +1,6 @@
 package com.example.c1weather.network
 
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 
 
 data class WeatherResponse (
@@ -48,7 +47,7 @@ data class MainData(
     @Json(name = "temp_max") val maxTemp: Double
 )
 data class WindData(
-    val speed: Long,
+    val speed: Double,
     @Json(name = "deg") val degree: Long
 )
 

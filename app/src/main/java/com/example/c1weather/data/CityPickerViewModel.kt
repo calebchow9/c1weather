@@ -25,14 +25,11 @@ class CityPickerViewModel : ViewModel() {
             try {
                 val cityIdString = cityIds.joinToString().filter { !it.isWhitespace() }
                 // call GET endpoint
-                Log.d("xxx", "before")
                 val weatherResponseObject = WeatherApi.retrofitService.getWeather(cityIdString, apiKey, units)
-                Log.d("xxx", "after")
                 // add new WeatherResponse to our liveData list
                 _cities.value = weatherResponseObject.list
             } catch (e: Exception) {
                 // empty list exception case
-                Log.d("xxx", e.toString())
                  _cities.value = listOf()
             }
         }

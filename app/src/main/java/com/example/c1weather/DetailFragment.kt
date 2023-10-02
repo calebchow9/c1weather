@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.c1weather.databinding.FragmentDetailBinding
 
+const val CITY = "cityName"
+
 class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
@@ -16,7 +18,7 @@ class DetailFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         arguments?.let {
-            cityName = it.getString("cityName").toString()
+            cityName = it.getString(CITY).toString()
         }
     }
 

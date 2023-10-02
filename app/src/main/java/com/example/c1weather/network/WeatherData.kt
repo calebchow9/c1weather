@@ -8,6 +8,23 @@ data class WeatherResponse (
     val list: List<WeatherData>
 )
 
+// SINGLE CITY weather data class
+data class CityWeatherResponse(
+    val coord: CoordinateData = CoordinateData(0.0, 0.0),
+    val weather: List<WeatherListData> = listOf(),
+    val base: String = "",
+    val main: MainData = MainData(0.0, 0.0, 0.0, 0, 0),
+    val visibility: Int = 0,
+    val wind: WindData = WindData(0.0, 0),
+    val clouds: CloudData = CloudData(0.0),
+    val dt: Long = 0,
+    val sys: SysData = SysData("", 0, 0, 0),
+    val timezone: Long = 0,
+    val id: Long = 0,
+    val name: String = "",
+    val cod: Int = 0
+)
+
 // MAIN weather data class
 data class WeatherData(
     val coord: CoordinateData,
@@ -45,6 +62,7 @@ data class MainData(
     @Json(name = "temp") val currentTemp: Double,
     @Json(name = "temp_min") val minTemp: Double,
     @Json(name = "temp_max") val maxTemp: Double,
+    val pressure: Int,
     val humidity: Int
 )
 data class WindData(

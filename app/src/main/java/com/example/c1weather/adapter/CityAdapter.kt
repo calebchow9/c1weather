@@ -48,7 +48,7 @@ class CityAdapter(private val context: Context?, private var dataset: List<Weath
         holder.itemBinding.humidityTextView.text = "${city.main.humidity}%"
 
         holder.itemBinding.cityCardView.setOnClickListener {
-            val action = CityPickerFragmentDirections.citySelectedAction(cityName = holder.itemBinding.cityTextView.text.toString())
+            val action = CityPickerFragmentDirections.citySelectedAction(cityId = city.id.toString())
             holder.itemView.findNavController().navigate(action)
         }
 

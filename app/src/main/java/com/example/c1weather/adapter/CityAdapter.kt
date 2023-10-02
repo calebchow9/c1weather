@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.c1weather.CityPickerFragmentDirections
 import com.example.c1weather.databinding.CityItemBinding
 import com.example.c1weather.network.WeatherData
 import kotlin.math.roundToInt
@@ -44,6 +46,12 @@ class CityAdapter(private val context: Context?, private var dataset: List<Weath
         holder.itemBinding.currentTempTextView.text = "${convertCelsiusToFahrenheit(city.main.currentTemp)}°"
         holder.itemBinding.minMaxTempTextView.text = createMinMaxString(convertCelsiusToFahrenheit(city.main.minTemp), convertCelsiusToFahrenheit(city.main.maxTemp))
         holder.itemBinding.cloudCoverTextView.text = "${city.clouds.cloudCover.roundToInt()}%"
+
+        holder.itemBinding.cityCardView.setOnClickListener {
+            val action = CityPickerFragmentDirections.citySelectedAction(cityName = holder.itemBinding.cityTextView.text.toString())
+            holder.itemView.findNavController().navigate(action)
+        }
+
 
     }
 

@@ -45,7 +45,7 @@ class CityAdapter(private val context: Context?, private var dataset: List<Weath
         holder.itemBinding.cityTextView.text = city.name
         holder.itemBinding.currentTempTextView.text = "${convertCelsiusToFahrenheit(city.main.currentTemp)}°"
         holder.itemBinding.minMaxTempTextView.text = createMinMaxString(convertCelsiusToFahrenheit(city.main.minTemp), convertCelsiusToFahrenheit(city.main.maxTemp))
-        holder.itemBinding.cloudCoverTextView.text = "${city.clouds.cloudCover.roundToInt()}%"
+        holder.itemBinding.humidityTextView.text = "${city.main.humidity}%"
 
         holder.itemBinding.cityCardView.setOnClickListener {
             val action = CityPickerFragmentDirections.citySelectedAction(cityName = holder.itemBinding.cityTextView.text.toString())

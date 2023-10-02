@@ -44,7 +44,8 @@ data class WeatherListData(
 data class MainData(
     @Json(name = "temp") val currentTemp: Double,
     @Json(name = "temp_min") val minTemp: Double,
-    @Json(name = "temp_max") val maxTemp: Double
+    @Json(name = "temp_max") val maxTemp: Double,
+    val humidity: Int
 )
 data class WindData(
     val speed: Double,

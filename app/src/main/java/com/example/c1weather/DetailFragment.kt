@@ -38,5 +38,6 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // temporary textView with city string passed through safeArgs
         binding.detailCityNameTextView.text = cityId
+        viewModel.getCityWeather(cityId)
     }
 }

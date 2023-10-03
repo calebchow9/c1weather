@@ -3,4 +3,9 @@
     <string name="city_picker_header">Weather App</string>
     <string name="city_country">US</string>
     <string name="humidity_icon">Humidity icon</string>
+    <string name="weather_icon">Weather icon</string>
+    <string name="windspeed_text">Windspeed</string>
+    <string name="sunrise_text">Sunrise</string>
+    <string name="sunset_text">Sunset</string>
+    <string name="pressure_text">Pressure</string>
 </resources>

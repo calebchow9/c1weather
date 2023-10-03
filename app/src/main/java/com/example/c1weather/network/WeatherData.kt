@@ -18,7 +18,7 @@ data class CityWeatherResponse(
     val wind: WindData = WindData(0.0, 0),
     val clouds: CloudData = CloudData(0.0),
     val dt: Long = 0,
-    val sys: SysData = SysData("", 0, 0, 0),
+    val sys: SysData = SysData("", 0, 0),
     val timezone: Long = 0,
     val id: Long = 0,
     val name: String = "",
@@ -46,7 +46,6 @@ data class CoordinateData(
 
 data class SysData(
     val country: String,
-    val timezone: Long,
     val sunrise: Long,
     val sunset: Long
 )

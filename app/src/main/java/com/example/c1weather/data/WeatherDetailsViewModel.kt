@@ -18,7 +18,7 @@ class WeatherDetailsViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 // call GET endpoint
-                val cityWeatherResponseObject = WeatherApi.retrofitService.getCityWeather(cityId, apiKey)
+                val cityWeatherResponseObject = WeatherApi.retrofitService.getCityWeather(cityId, apiKey, units)
                 // add new WeatherResponse to our liveData list
                 _cityData.value = cityWeatherResponseObject
             } catch (e: Exception) {

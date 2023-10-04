@@ -9,8 +9,8 @@ import com.example.c1weather.network.WeatherApi
 import com.example.c1weather.network.WeatherData
 import kotlinx.coroutines.launch
 
-const val units = "metric"
-const val apiKey = "4467831206bb8b3056f38cba080844c0"
+const val UNITS = "metric"
+const val API_KEY = "4467831206bb8b3056f38cba080844c0"
 
 class CityPickerViewModel : ViewModel() {
     // Use backing to protect private ViewModel variables
@@ -25,7 +25,7 @@ class CityPickerViewModel : ViewModel() {
             try {
                 val cityIdString = cityIds.joinToString().filter { !it.isWhitespace() }
                 // call GET endpoint
-                val weatherResponseObject = WeatherApi.retrofitService.getWeather(cityIdString, apiKey, units)
+                val weatherResponseObject = WeatherApi.retrofitService.getWeather(cityIdString, API_KEY, UNITS)
                 // add new WeatherResponse to our liveData list
                 _cities.value = weatherResponseObject.list
             } catch (e: Exception) {

@@ -11,7 +11,7 @@
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <argument
-            android:name="cityName"
+            android:name="cityId"
             app:argType="string" />
     </fragment>
     <fragment

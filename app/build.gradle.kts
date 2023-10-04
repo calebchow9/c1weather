@@ -41,6 +41,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.room:room-ktx:2.4.2")
+    implementation("androidx.room:room-runtime:2.4.2")
     implementation("com.github.bumptech.glide:glide:4.14.2")
     val navVersion = "2.5.2"
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")

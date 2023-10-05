@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [WeatherDataCache::class], version = 1)
+@Database(entities = [GroupCityDataCache::class, CityDetailDataCache::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {
-    abstract fun weatherDao(): WeatherDao
+    abstract fun groupCityDao(): GroupCityDao
+    abstract fun cityDetailsDao(): CityDetailsDao
     // create only one instance of db
     companion object {
         @Volatile
@@ -19,7 +20,7 @@ abstract class AppDatabase: RoomDatabase() {
                     context,
                     AppDatabase::class.java,
                     "app_database")
-                    .createFromAsset("database/weatherdatacache.db")
+                    .createFromAsset("database/weather_data_cache.db")
                     .build()
                 INSTANCE = instance
 

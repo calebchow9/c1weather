@@ -8,16 +8,25 @@ import androidx.room.Update
 
 // Data Access Object -- provides r/w access to data (i.e. like SQL on db)
 @Dao
-interface WeatherDao {
-    @Query("SELECT * FROM weatherdatacache")
-    fun getAllCitiesWeather(): List<WeatherDataCache>
-
-    @Query("SELECT * FROM weatherdatacache WHERE id = :cityId")
-    fun getWeatherByCityId(cityId: String): WeatherDataCache
+interface CityDetailsDao {
+    @Query("SELECT * FROM citydetaildatacache WHERE id = :cityId")
+    fun getWeatherByCityId(cityId: String): CityDetailDataCache
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(weatherDataCache: WeatherDataCache)
+    suspend fun insert(cityDetailDataCache: CityDetailDataCache)
 
     @Update
-    suspend fun update(weatherDataCache: WeatherDataCache)
+    suspend fun update(cityDetailDataCache: CityDetailDataCache)
+}
+
+@Dao
+interface GroupCityDao {
+    @Query("SELECT * FROM groupcitydatacache")
+    fun getGroupCityWeather(): List<GroupCityDataCache>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(groupCityDataCache: GroupCityDataCache)
+
+    @Update
+    suspend fun update(cityDetailDataCache: CityDetailDataCache)
 }

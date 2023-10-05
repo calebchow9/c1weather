@@ -1,42 +1,88 @@
 package com.example.c1weather.network
 
+import com.example.c1weather.database.CityDetailDataCache
+import com.example.c1weather.database.GroupCityDataCache
 import com.squareup.moshi.Json
 
+// DEFAULT constants
+const val DEFAULT_STRING = ""
+const val DEFAULT_LONG = 0.toLong()
+const val DEFAULT_INT = 0
+const val DEFAULT_DOUBLE = 0.0
 
+// GROUP CITY weather data class
 data class WeatherResponse (
-    val cnt: Int,
-    val list: List<WeatherData>
-)
+    val cnt: Int = DEFAULT_INT,
+    val list: List<WeatherData> = listOf()
+) {
+
+    private fun convertToGroupCityDataCache(weatherDataObject: WeatherData): GroupCityDataCache {
+        return GroupCityDataCache(
+            id = weatherDataObject.id,
+            cityName = weatherDataObject.name,
+            country = weatherDataObject.sys.country,
+            currentTemp = weatherDataObject.main.currentTemp,
+            minTemp = weatherDataObject.main.minTemp,
+            maxTemp = weatherDataObject.main.maxTemp,
+            humidity = weatherDataObject.main.humidity
+        )
+    }
+
+    private fun convertToCacheModel(weatherObjectList: List<WeatherData>): List<GroupCityDataCache> {
+        val listOfWeatherDataCaches = mutableListOf<GroupCityDataCache>()
+        for (city: WeatherData in weatherObjectList) {
+            listOfWeatherDataCaches.add(convertToGroupCityDataCache(city))
+        }
+        return listOfWeatherDataCaches
+    }
+}
 
 // SINGLE CITY weather data class
 data class CityWeatherResponse(
-    val coord: CoordinateData = CoordinateData(0.0, 0.0),
+    val coord: CoordinateData = CoordinateData(DEFAULT_DOUBLE, DEFAULT_DOUBLE),
     val weather: List<WeatherListData> = listOf(),
-    val base: String = "",
-    val main: MainData = MainData(0.0, 0.0, 0.0, 0, 0),
-    val visibility: Int = 0,
-    val wind: WindData = WindData(0.0, 0),
-    val clouds: CloudData = CloudData(0.0),
-    val dt: Long = 0,
-    val sys: SysData = SysData("", 0, 0),
-    val timezone: Long = 0,
-    val id: Long = 0,
-    val name: String = "",
-    val cod: Int = 0
-)
+    val base: String = DEFAULT_STRING,
+    val main: MainData = MainData(DEFAULT_DOUBLE, DEFAULT_DOUBLE, DEFAULT_DOUBLE, DEFAULT_INT, DEFAULT_INT),
+    val visibility: Int = DEFAULT_INT,
+    val wind: WindData = WindData(DEFAULT_DOUBLE, DEFAULT_LONG),
+    val clouds: CloudData = CloudData(DEFAULT_DOUBLE),
+    val dt: Long = DEFAULT_LONG,
+    val sys: SysData = SysData(DEFAULT_STRING, DEFAULT_LONG, DEFAULT_LONG),
+    val timezone: Long = DEFAULT_LONG,
+    val id: Long = DEFAULT_LONG,
+    val name: String = DEFAULT_STRING,
+    val cod: Int = DEFAULT_INT
+) {
+    private fun convertToCacheModel(cityWeatherObject: CityWeatherResponse): CityDetailDataCache {
+        return CityDetailDataCache(
+            id = cityWeatherObject.id,
+            cityName = cityWeatherObject.name,
+            country = cityWeatherObject.sys.country,
+            currentTemp = cityWeatherObject.main.currentTemp,
+            minTemp = cityWeatherObject.main.minTemp,
+            maxTemp = cityWeatherObject.main.maxTemp,
+            humidity = cityWeatherObject.main.humidity,
+            currentDescription = cityWeatherObject.weather[0].mainWeatherDescription,
+            windSpeed = cityWeatherObject.wind.speed,
+            pressure = cityWeatherObject.main.pressure,
+            sunrise = cityWeatherObject.sys.sunrise,
+            sunset = cityWeatherObject.sys.sunset,
+            icon = cityWeatherObject.weather[0].icon
+        )
+    }
+}
 
-// MAIN weather data class
 data class WeatherData(
-    val coord: CoordinateData,
-    val sys: SysData,
-    val weather: List<WeatherListData>,
-    val main: MainData,
-    val visibility: Int,
-    val wind: WindData,
-    val clouds: CloudData,
-    val dt: Long,
-    val id: Long,
-    val name: String
+    val coord: CoordinateData = CoordinateData(DEFAULT_DOUBLE, DEFAULT_DOUBLE),
+    val sys: SysData = SysData(DEFAULT_STRING, DEFAULT_LONG, DEFAULT_LONG),
+    val weather: List<WeatherListData> = listOf(),
+    val main: MainData = MainData(DEFAULT_DOUBLE, DEFAULT_DOUBLE, DEFAULT_DOUBLE, DEFAULT_INT, DEFAULT_INT),
+    val visibility: Int = DEFAULT_INT,
+    val wind: WindData = WindData(DEFAULT_DOUBLE, DEFAULT_LONG),
+    val clouds: CloudData = CloudData(DEFAULT_DOUBLE),
+    val dt: Long = DEFAULT_LONG,
+    val id: Long = DEFAULT_LONG,
+    val name: String = DEFAULT_STRING
 )
 
 data class CoordinateData(

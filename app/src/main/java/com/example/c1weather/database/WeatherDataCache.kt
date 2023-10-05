@@ -23,6 +23,7 @@ data class CityDetailDataCache (
     val minTemp: Double,
     val maxTemp: Double,
     val humidity: Int,
+    val icon: String,
     val currentDescription: String,
     val windSpeed: Double,
     val pressure: Int,
@@ -35,7 +36,7 @@ data class CityDetailDataCache (
             name = cache.cityName,
             sys = SysData(country = cache.country, sunrise = cache.sunrise, sunset = cache.sunset),
             main = MainData(currentTemp = cache.currentTemp, minTemp = cache.minTemp, maxTemp = cache.maxTemp, humidity = cache.humidity, pressure = cache.pressure),
-            weather = listOf(WeatherListData(id = DEFAULT_INT, mainWeatherDescription = cache.currentDescription, description = DEFAULT_STRING, icon = DEFAULT_STRING)),
+            weather = listOf(WeatherListData(id = DEFAULT_INT, mainWeatherDescription = cache.currentDescription, description = DEFAULT_STRING, icon = cache.icon)),
             wind = WindData(speed = cache.windSpeed, degree = DEFAULT_LONG)
         )
     }

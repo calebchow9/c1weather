@@ -66,7 +66,8 @@ data class CityWeatherResponse(
             windSpeed = cityWeatherObject.wind.speed,
             pressure = cityWeatherObject.main.pressure,
             sunrise = cityWeatherObject.sys.sunrise,
-            sunset = cityWeatherObject.sys.sunset
+            sunset = cityWeatherObject.sys.sunset,
+            icon = cityWeatherObject.weather[0].icon
         )
     }
 }

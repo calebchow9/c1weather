@@ -14,13 +14,12 @@ abstract class AppDatabase: RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
-        fun databaseBuilder(context: Context): AppDatabase {
+        fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context,
                     AppDatabase::class.java,
                     "app_database")
-                    .createFromAsset("database/weather_data_cache.db")
                     .build()
                 INSTANCE = instance
 

@@ -12,7 +12,7 @@ const val DEFAULT_DOUBLE = 0.0
 
 // GROUP CITY weather data class
 data class WeatherResponse (
-    val cnt: Int = 0,
+    val cnt: Int = DEFAULT_INT,
     val list: List<WeatherData> = listOf()
 ) {
 

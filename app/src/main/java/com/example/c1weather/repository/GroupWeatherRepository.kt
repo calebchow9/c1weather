@@ -6,6 +6,7 @@ import com.example.c1weather.data.API_KEY
 import com.example.c1weather.data.GROUP_CITY_IDS
 import com.example.c1weather.data.UNITS
 import com.example.c1weather.database.AppDatabase
+import com.example.c1weather.database.GroupCityDao
 import com.example.c1weather.database.GroupCityDataCache
 import com.example.c1weather.network.WeatherApi
 import com.example.c1weather.network.WeatherData

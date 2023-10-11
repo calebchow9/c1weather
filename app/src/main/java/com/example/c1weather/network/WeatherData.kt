@@ -28,7 +28,7 @@ data class WeatherResponse (
         )
     }
 
-    private fun convertToCacheModel(weatherObjectList: List<WeatherData>): List<GroupCityDataCache> {
+    fun convertToCacheModel(weatherObjectList: List<WeatherData>): List<GroupCityDataCache> {
         val listOfWeatherDataCaches = mutableListOf<GroupCityDataCache>()
         for (city: WeatherData in weatherObjectList) {
             listOfWeatherDataCaches.add(convertToGroupCityDataCache(city))

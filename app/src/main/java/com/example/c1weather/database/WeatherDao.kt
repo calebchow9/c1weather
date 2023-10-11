@@ -28,6 +28,12 @@ interface GroupCityDao {
     @Insert
     suspend fun insert(cacheItem: GroupCityDataCache)
 
+    @Insert
+    suspend fun insertAll(cacheItems: List<GroupCityDataCache>)
+
     @Delete
     suspend fun delete(cacheItem: GroupCityDataCache)
+
+    @Delete
+    suspend fun deleteAll(cacheItems: List<GroupCityDataCache>)
 }

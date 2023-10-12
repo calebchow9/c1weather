@@ -47,6 +47,7 @@ class CityPickerFragment : Fragment() {
         ) {
             cityAdapter.updateWeatherData(it)
         }
+        viewModel.getWeatherFromRepository()
     }
 
     override fun onDestroyView() {

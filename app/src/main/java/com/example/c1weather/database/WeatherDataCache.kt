@@ -30,7 +30,7 @@ data class CityDetailDataCache (
     val sunrise: Long,
     val sunset: Long
 ) {
-    private fun convertToNetworkModel(cache: CityDetailDataCache): CityWeatherResponse {
+    fun convertToNetworkModel(cache: CityDetailDataCache): CityWeatherResponse {
         return CityWeatherResponse(
             id = cache.id,
             name = cache.cityName,

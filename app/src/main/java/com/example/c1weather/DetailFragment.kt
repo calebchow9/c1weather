@@ -7,9 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.example.c1weather.data.CityPickerViewModelFactory
 import com.example.c1weather.data.WeatherDetailsViewModel
+import com.example.c1weather.data.WeatherDetailsViewModelFactory
 import com.example.c1weather.databinding.FragmentDetailBinding
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,7 +26,11 @@ class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var cityId: String
-    private val viewModel: WeatherDetailsViewModel by viewModels()
+    private val viewModel: WeatherDetailsViewModel by activityViewModels {
+        WeatherDetailsViewModelFactory(
+            (activity?.application as WeatherCacheApplication).repository
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,14 +60,13 @@ class DetailFragment : Fragment() {
 
     private fun convertTimeStampToDate(timestamp: Long, offset: Long): String {
         val sdf = SimpleDateFormat("h:mm a", Locale.ENGLISH)
-        sdf.timeZone = TimeZone.getTimeZone("GMT")
         val date = Date((timestamp + offset) * 1000)
         return sdf.format(date).toString()
     }
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getCityWeather(cityId)
+        viewModel.getWeatherFromRepository(cityId)
         viewModel.cityData.observe(viewLifecycleOwner
         ) {
             Glide.with(view)

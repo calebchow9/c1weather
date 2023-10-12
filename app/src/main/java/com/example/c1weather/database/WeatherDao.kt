@@ -10,10 +10,13 @@ import androidx.room.Update
 // Data Access Object -- provides r/w access to data (i.e. like SQL on db)
 @Dao
 interface CityDetailsDao {
+    @Query("SELECT EXISTS(SELECT * FROM citydetaildatacache WHERE id = :cityId)")
+    fun doesCityExistInDB(cityId: String): Boolean
+
     @Query("SELECT * FROM citydetaildatacache WHERE id = :cityId")
     fun getWeatherByCityId(cityId: String): CityDetailDataCache
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cacheItem: CityDetailDataCache)
 
     @Delete
@@ -25,9 +28,9 @@ interface GroupCityDao {
     @Query("SELECT * FROM groupcitydatacache")
     fun getGroupCityWeather(): List<GroupCityDataCache>
 
-    @Insert
-    suspend fun insert(cacheItem: GroupCityDataCache)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(cacheItems: List<GroupCityDataCache>)
 
     @Delete
-    suspend fun delete(cacheItem: GroupCityDataCache)
+    suspend fun deleteAll(cacheItems: List<GroupCityDataCache>)
 }

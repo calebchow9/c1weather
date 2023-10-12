@@ -30,7 +30,7 @@ data class CityDetailDataCache (
     val sunrise: Long,
     val sunset: Long
 ) {
-    private fun convertToNetworkModel(cache: CityDetailDataCache): CityWeatherResponse {
+    fun convertToNetworkModel(cache: CityDetailDataCache): CityWeatherResponse {
         return CityWeatherResponse(
             id = cache.id,
             name = cache.cityName,
@@ -52,18 +52,12 @@ data class GroupCityDataCache (
     val maxTemp: Double,
     val humidity: Int
 ){
-    private fun convertToNetworkModel(groupCityDataCacheList: List<GroupCityDataCache>): WeatherResponse {
-        val list = mutableListOf<WeatherData>()
-        for (city: GroupCityDataCache in groupCityDataCacheList) {
-            list.add(
-                WeatherData(
-                    id = city.id,
-                    name = city.cityName,
-                    sys = SysData(country = city.country, DEFAULT_LONG, DEFAULT_LONG),
-                    main = MainData(currentTemp = city.currentTemp, minTemp = city.minTemp, maxTemp = city.maxTemp, humidity = city.humidity, pressure = DEFAULT_INT)
-                )
-            )
-        }
-        return WeatherResponse(list = list)
+    fun convertToNetworkModel(cache: GroupCityDataCache): WeatherData {
+        return WeatherData(
+            id = cache.id,
+            name = cache.cityName,
+            sys = SysData(country = cache.country, DEFAULT_LONG, DEFAULT_LONG),
+            main = MainData(currentTemp = cache.currentTemp, minTemp = cache.minTemp, maxTemp = cache.maxTemp, humidity = cache.humidity, pressure = DEFAULT_INT)
+        )
     }
 }

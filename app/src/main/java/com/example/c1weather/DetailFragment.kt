@@ -14,6 +14,8 @@ import com.example.c1weather.data.CityPickerViewModelFactory
 import com.example.c1weather.data.WeatherDetailsViewModel
 import com.example.c1weather.data.WeatherDetailsViewModelFactory
 import com.example.c1weather.databinding.FragmentDetailBinding
+import com.example.c1weather.network.CityWeatherResponse
+import com.example.c1weather.network.NetworkState
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -64,25 +66,72 @@ class DetailFragment : Fragment() {
         return sdf.format(date).toString()
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.getWeatherFromRepository(cityId)
-        viewModel.cityData.observe(viewLifecycleOwner
+        viewModel.cityState.observe(viewLifecycleOwner
         ) {
-            Glide.with(view)
-                .load("https://openweathermap.org/img/wn/${it.weather[0].icon}@4x.png")
-                .into(binding.detailWeatherImageView)
-            binding.detailCityNameTextView.text = it.name
-            binding.detailCountryTextView.text = it.sys.country
-            binding.detailCurrentTempTextView.text = "${convertCelsiusToFahrenheit(it.main.currentTemp)}°"
-            binding.detailWeatherConditionsTextView.text = it.weather[0].mainWeatherDescription
-            binding.detailMinMaxTempTextView.text = createMinMaxString(convertCelsiusToFahrenheit(it.main.minTemp), convertCelsiusToFahrenheit(it.main.maxTemp))
-            binding.detailHumidityCurrentTextTextView.text = "${it.main.humidity}%"
-            binding.detailWindSpeedValueTextView.text = "${it.wind.speed} MPH"
-            binding.detailPressureValueTextView.text = "${it.main.pressure} hPa"
-            binding.detailSunriseValueTextView.text = convertTimeStampToDate(it.sys.sunrise, it.timezone)
-            binding.detailSunsetValueTextView.text = convertTimeStampToDate(it.sys.sunset, it.timezone)
+            when(it) {
+                is NetworkState.Success -> handleSuccess(it.result, view)
+                is NetworkState.Error -> showNetworkState(isLoading = false)
+                is NetworkState.Loading -> showNetworkState(isLoading = true)
+            }
         }
+    }
 
+    private fun toggleViews(shouldDisplay: Boolean) {
+        binding.detailWeatherImageView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailCityNameTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailCountryTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.countryLineDivider.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailCurrentTempTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailWeatherConditionsTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailMinMaxTempTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailHumidityImageView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailHumidityCurrentTextTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.temperatureDivider.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailWindSpeedTextTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailWindSpeedValueTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailPressureTextTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailPressureValueTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailSunriseTextTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailSunriseValueTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailSunsetTextTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+        binding.detailSunsetValueTextView.visibility = if(shouldDisplay) View.VISIBLE else View.GONE
+    }
+
+    private fun showNetworkState(isLoading: Boolean) {
+        toggleViews(shouldDisplay = false)
+        if (isLoading) {
+            binding.detailErrorTextView.visibility = View.GONE
+            Glide.with(this)
+                .asGif()
+                .load(R.drawable.loading)
+                .into(binding.detailStateImageView)
+        } else { // Error state
+            Glide.with(this).clear(binding.detailStateImageView)
+            binding.detailStateImageView.setBackgroundResource(R.drawable.snag_error)
+            binding.detailErrorTextView.visibility = View.VISIBLE
+        }
+        binding.detailStateImageView.visibility = View.VISIBLE
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun handleSuccess(data: CityWeatherResponse, view: View) {
+        binding.detailErrorTextView.visibility = View.GONE
+        binding.detailStateImageView.visibility = View.GONE
+        Glide.with(view)
+            .load("https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png")
+            .into(binding.detailWeatherImageView)
+        binding.detailCityNameTextView.text = data.name
+        binding.detailCountryTextView.text = data.sys.country
+        binding.detailCurrentTempTextView.text = "${convertCelsiusToFahrenheit(data.main.currentTemp)}°"
+        binding.detailWeatherConditionsTextView.text = data.weather[0].mainWeatherDescription
+        binding.detailMinMaxTempTextView.text = createMinMaxString(convertCelsiusToFahrenheit(data.main.minTemp), convertCelsiusToFahrenheit(data.main.maxTemp))
+        binding.detailHumidityCurrentTextTextView.text = "${data.main.humidity}%"
+        binding.detailWindSpeedValueTextView.text = "${data.wind.speed} MPH"
+        binding.detailPressureValueTextView.text = "${data.main.pressure} hPa"
+        binding.detailSunriseValueTextView.text = convertTimeStampToDate(data.sys.sunrise, data.timezone)
+        binding.detailSunsetValueTextView.text = convertTimeStampToDate(data.sys.sunset, data.timezone)
+        toggleViews(shouldDisplay = true)
     }
 }

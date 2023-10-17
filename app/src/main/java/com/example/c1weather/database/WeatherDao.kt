@@ -6,12 +6,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.c1weather.data.GROUP_CITY_IDS
 
 // Data Access Object -- provides r/w access to data (i.e. like SQL on db)
 @Dao
 interface CityDetailsDao {
     @Query("SELECT EXISTS(SELECT * FROM citydetaildatacache WHERE id = :cityId)")
-    fun doesCityExistInDB(cityId: String): Boolean
+    fun doesCityExist(cityId: String): Boolean
 
     @Query("SELECT * FROM citydetaildatacache WHERE id = :cityId")
     fun getWeatherByCityId(cityId: String): CityDetailDataCache
@@ -25,6 +26,9 @@ interface CityDetailsDao {
 
 @Dao
 interface GroupCityDao {
+    @Query("SELECT EXISTS(SELECT * FROM groupcitydatacache WHERE id in (:listOfCityIds))")
+    fun doesGroupCitiesExist(listOfCityIds: List<String>): Boolean
+
     @Query("SELECT * FROM groupcitydatacache")
     fun getGroupCityWeather(): List<GroupCityDataCache>
 

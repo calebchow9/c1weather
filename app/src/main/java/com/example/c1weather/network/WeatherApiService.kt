@@ -2,6 +2,7 @@ package com.example.c1weather.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
@@ -18,10 +19,10 @@ private val retrofit = Retrofit.Builder()
 
 interface WeatherApiService {
     @GET("data/2.5/group")
-    suspend fun getWeather(@Query("id") cityIds: String, @Query("appid") key: String, @Query("units") units: String): WeatherResponse
+    suspend fun getWeather(@Query("id") cityIds: String, @Query("appid") key: String, @Query("units") units: String): Response<WeatherResponse>
 
     @GET("data/2.5/weather")
-    suspend fun getCityWeather(@Query("id") cityId: String, @Query("appid") key: String, @Query("units") units: String) : CityWeatherResponse
+    suspend fun getCityWeather(@Query("id") cityId: String, @Query("appid") key: String, @Query("units") units: String) : Response<CityWeatherResponse>
 }
 
 object WeatherApi {

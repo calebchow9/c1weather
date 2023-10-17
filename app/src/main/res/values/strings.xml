@@ -8,4 +8,6 @@
     <string name="sunrise_text">Sunrise</string>
     <string name="sunset_text">Sunset</string>
     <string name="pressure_text">Pressure</string>
+    <string name="current_state_image">Current state image</string>
+    <string name="error_state_text">We are having some technical difficulties, please try again later</string>
 </resources>

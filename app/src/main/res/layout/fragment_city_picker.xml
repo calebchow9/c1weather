@@ -30,4 +30,35 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/state_imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/error_textView"
+        android:visibility="gone"
+        android:contentDescription="@string/current_state_image" />
+
+    <TextView
+        android:id="@+id/error_textView"
+        android:visibility="gone"
+        style="@style/Widget.C1Weather.TextView"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginBottom="100dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toBottomOf="@id/state_imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_state_text" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,10 +8,13 @@ import com.example.c1weather.data.API_KEY
 import com.example.c1weather.data.GROUP_CITY_IDS
 import com.example.c1weather.data.UNITS
 import com.example.c1weather.database.AppDatabase
+import com.example.c1weather.database.CityDetailsDao
 import com.example.c1weather.database.GroupCityDao
+import com.example.c1weather.network.CityWeatherResponse
 import com.example.c1weather.network.NetworkState
 import com.example.c1weather.network.WeatherApi
 import com.example.c1weather.network.WeatherData
+import com.example.c1weather.network.WeatherListData
 import com.example.c1weather.network.WeatherResponse
 import com.example.c1weather.repository.WeatherRepository
 import io.mockk.Runs
@@ -31,33 +34,6 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-object LiveDataTestUtil {
-    /**
-     * Get the value from a LiveData object. We're waiting for LiveData to emit, for 2 seconds.
-     * Once we got a notification via onChanged, we stop observing.
-     */
-    @Throws(InterruptedException::class)
-    fun <T> getValue(liveData: LiveData<T>): T? {
-        val data = arrayOfNulls<Any>(1)
-        val latch = CountDownLatch(1)
-        val observer: Observer<T?> = object : Observer<T?> {
-            override fun onChanged(o: T?) {
-                data[0] = o
-                latch.countDown()
-                liveData.removeObserver(this)
-            }
-        }
-        liveData.observeForever(observer)
-        latch.await(2, TimeUnit.SECONDS)
-        @Suppress("UNCHECKED_CAST")
-        return data[0] as T?
-    }
-}
 class WeatherRepositoryUnitTest {
 
     @get:Rule
@@ -79,7 +55,6 @@ class WeatherRepositoryUnitTest {
         coEvery { WeatherApi.retrofitService.getWeather(GROUP_CITY_IDS, API_KEY, UNITS) } returns testSuccessfulResponse
 
         val testRepository = WeatherRepository(database)
-
         testRepository.refreshWeather()
         val result = LiveDataTestUtil.getValue(testRepository.groupState)
 
@@ -106,12 +81,59 @@ class WeatherRepositoryUnitTest {
         coEvery { WeatherApi.retrofitService.getWeather(GROUP_CITY_IDS, API_KEY, UNITS) } returns testErrorResponse
 
         val testRepository = WeatherRepository(database)
-
         testRepository.refreshWeather()
         val result = LiveDataTestUtil.getValue(testRepository.groupState)
 
         assertEquals(expected, result)
     }
 
+    @Test
+    fun testRefreshWeatherErrorResponseFilledCache() = runBlocking {
+        val testSuccessfulResponse: Response<WeatherResponse> = Response.success(WeatherResponse())
+        val expected: NetworkState<List<WeatherData>> = NetworkState.Success(result = listOf())
+
+        // setup mock database and DAO
+        val groupCityDao = mockk<GroupCityDao>()
+        coEvery { groupCityDao.insertAll(any()) } just Runs
+        coEvery { groupCityDao.doesGroupCitiesExist(any())} returns true
+        val database = mockk<AppDatabase>()
+        coEvery { database.groupCityDao() } returns groupCityDao
+
+        // mock RetrofitAPI object
+        mockkObject(WeatherApi)
+        coEvery { WeatherApi.retrofitService.getWeather(GROUP_CITY_IDS, API_KEY, UNITS) } returns testSuccessfulResponse
+
+        val testRepository = WeatherRepository(database)
+        testRepository.refreshWeather()
+        val result = LiveDataTestUtil.getValue(testRepository.groupState)
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun testRefreshCityWeatherSuccessfulResponse() = runBlocking {
+        val testSuccessfulResponse: Response<CityWeatherResponse> = Response.success(CityWeatherResponse(weather=listOf(
+            WeatherListData(id = 1, mainWeatherDescription = "", description = "", icon = "")
+        )))
+        val expected: NetworkState<CityWeatherResponse> = NetworkState.Success(result = CityWeatherResponse(weather=listOf(
+            WeatherListData(id = 1, mainWeatherDescription = "", description = "", icon = "")
+        )))
+
+        // setup mock database and DAO
+        val cityDetailsDao = mockk<CityDetailsDao>()
+        coEvery { cityDetailsDao.insert(any()) } just Runs
+        val database = mockk<AppDatabase>()
+        coEvery { database.cityDetailsDao() } returns cityDetailsDao
+
+        // mock RetrofitAPI object
+        mockkObject(WeatherApi)
+        coEvery { WeatherApi.retrofitService.getCityWeather(any(), API_KEY, UNITS) } returns testSuccessfulResponse
+
+        val testRepository = WeatherRepository(database)
+        testRepository.refreshCityWeather("test_cityId")
+        val result = LiveDataTestUtil.getValue(testRepository.cityState)
+
+        assertEquals(expected, result)
+    }
 
 }

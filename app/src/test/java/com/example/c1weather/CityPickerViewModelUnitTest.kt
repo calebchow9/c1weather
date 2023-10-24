@@ -1,23 +1,18 @@
 package com.example.c1weather
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.example.c1weather.data.API_KEY
 import com.example.c1weather.data.CityPickerViewModel
-import com.example.c1weather.data.GROUP_CITY_IDS
-import com.example.c1weather.data.UNITS
-import com.example.c1weather.database.AppDatabase
-import com.example.c1weather.database.GroupCityDao
+import com.example.c1weather.data.CityPickerViewModelFactory
+import com.example.c1weather.data.WeatherDetailsViewModel
 import com.example.c1weather.network.NetworkState
-import com.example.c1weather.network.WeatherApi
 import com.example.c1weather.network.WeatherData
-import com.example.c1weather.network.WeatherResponse
 import com.example.c1weather.repository.WeatherRepository
 import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.just
 import org.junit.Test
 import io.mockk.mockk
-import io.mockk.mockkObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -25,36 +20,63 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertThrows
+import org.junit.Before
 import org.junit.Rule
-import retrofit2.Response
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class CityPickerViewModelUnitTest {
+    private val repository = mockk<WeatherRepository>(relaxed = true)
+    private lateinit var viewModel: CityPickerViewModel
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
-    @OptIn(ExperimentalCoroutinesApi::class)
-    @Test
-    fun testGetWeatherFromRepository() = runTest {
-        val testDispatcher = UnconfinedTestDispatcher(testScheduler)
-        Dispatchers.setMain(testDispatcher)
 
-        val testSuccessfulResponse: Response<WeatherResponse> = Response.success(WeatherResponse())
-        val expected: NetworkState<List<WeatherData>> = NetworkState.Success(result = listOf())
-
-        // setup mock database and DAO
-        val groupCityDao = mockk<GroupCityDao>()
-        coEvery { groupCityDao.insertAll(any()) } just Runs
-        val database = mockk<AppDatabase>()
-        coEvery { database.groupCityDao() } returns groupCityDao
-        val repository = WeatherRepository(database)
-        // mock RetrofitAPI object
-        mockkObject(WeatherApi)
-        coEvery { WeatherApi.retrofitService.getWeather(GROUP_CITY_IDS, API_KEY, UNITS) } returns testSuccessfulResponse
-
-        val testViewModel = CityPickerViewModel(repository)
-        testViewModel.getWeatherFromRepository()
-        val result = LiveDataTestUtil.getValue(testViewModel.groupState)
-
-        assertEquals(expected, result)
+    @Before
+    fun setUp() {
+        viewModel = CityPickerViewModelFactory(repository).create(CityPickerViewModel::class.java)
     }
+
+    @Test
+    fun `test viewModel getWeatherFromRepository with successful response`() = runTest {
+        Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
+        val expected: NetworkState<List<WeatherData>> = NetworkState.Success(result = listOf())
+        coEvery { repository.refreshWeather() } answers {
+            every { repository.groupState.value } returns expected
+        }
+        viewModel.getWeatherFromRepository()
+
+        assertEquals(expected, viewModel.groupState.value)
+    }
+
+    @Test
+    fun `test viewModel getWeatherFromRepository with error response`() = runTest {
+        Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
+        val expected: NetworkState<List<WeatherData>> = NetworkState.Error(message = "Response.error()")
+        coEvery { repository.refreshWeather() } answers {
+            every { repository.groupState.value } returns expected
+        }
+        viewModel.getWeatherFromRepository()
+
+        assertEquals(expected, viewModel.groupState.value)
+    }
+
+    @Test
+    fun `test CityPickerViewModel factory successful viewModel creation`() {
+        val testViewModel = CityPickerViewModelFactory(repository).create(CityPickerViewModel::class.java)
+
+        assertNotNull(testViewModel)
+        assertEquals(testViewModel::class.java, CityPickerViewModel::class.java)
+    }
+
+    @Test
+    fun `test CityPickerViewModel factory error viewModel creation`() {
+        assertThrows(IllegalArgumentException::class.java) {
+            CityPickerViewModelFactory(repository).create(
+                WeatherDetailsViewModel::class.java
+            )
+        }
+    }
+
 }

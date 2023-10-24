@@ -8,6 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.c1weather.repository.WeatherRepository
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import kotlin.math.roundToInt
 
 class WeatherDetailsViewModel(private val weatherRepo: WeatherRepository) : ViewModel() {
     val cityState = weatherRepo.cityState
@@ -20,6 +24,20 @@ class WeatherDetailsViewModel(private val weatherRepo: WeatherRepository) : View
                 e.printStackTrace()
             }
         }
+    }
+
+     fun convertCelsiusToFahrenheit(celsius: Double) : Int {
+        return ((celsius * 9/5) + 32).roundToInt()
+    }
+
+    fun createMinMaxString(min: Int, max: Int): String {
+        return "$min°/$max°"
+    }
+
+    fun convertTimeStampToDate(timestamp: Long, offset: Long): String {
+        val sdf = SimpleDateFormat("h:mm a", Locale.ENGLISH)
+        val date = Date((timestamp + offset) * 1000)
+        return sdf.format(date).toString()
     }
 }
 

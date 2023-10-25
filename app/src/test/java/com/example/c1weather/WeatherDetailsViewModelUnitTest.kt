@@ -91,7 +91,7 @@ class WeatherDetailsViewModelUnitTest {
 
     @Test
     fun `test convert millisecond timestamp to date`() {
-        val expected = "8:47 PM"
+        val expected = "2:47 AM"
         assertEquals(expected, viewModel.convertTimeStampToDate(1698173693272, 0))
     }
 }

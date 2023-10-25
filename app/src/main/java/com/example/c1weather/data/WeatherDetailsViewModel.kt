@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.math.roundToInt
 
 class WeatherDetailsViewModel(private val weatherRepo: WeatherRepository) : ViewModel() {
@@ -36,6 +37,7 @@ class WeatherDetailsViewModel(private val weatherRepo: WeatherRepository) : View
 
     fun convertTimeStampToDate(timestamp: Long, offset: Long): String {
         val sdf = SimpleDateFormat("h:mm a", Locale.ENGLISH)
+        sdf.timeZone = TimeZone.getTimeZone("GMT")
         val date = Date((timestamp + offset) * 1000)
         return sdf.format(date).toString()
     }

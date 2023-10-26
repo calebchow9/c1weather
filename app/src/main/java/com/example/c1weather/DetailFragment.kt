@@ -52,20 +52,6 @@ class DetailFragment : Fragment() {
         return binding.root
     }
 
-    private fun convertCelsiusToFahrenheit(celsius: Double) : Int {
-        return ((celsius * 9/5) + 32).roundToInt()
-    }
-
-    private fun createMinMaxString(min: Int, max: Int): String {
-        return "$min°/$max°"
-    }
-
-    private fun convertTimeStampToDate(timestamp: Long, offset: Long): String {
-        val sdf = SimpleDateFormat("h:mm a", Locale.ENGLISH)
-        val date = Date((timestamp + offset) * 1000)
-        return sdf.format(date).toString()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.getWeatherFromRepository(cityId)
         viewModel.cityState.observe(viewLifecycleOwner
@@ -124,14 +110,14 @@ class DetailFragment : Fragment() {
             .into(binding.detailWeatherImageView)
         binding.detailCityNameTextView.text = data.name
         binding.detailCountryTextView.text = data.sys.country
-        binding.detailCurrentTempTextView.text = "${convertCelsiusToFahrenheit(data.main.currentTemp)}°"
+        binding.detailCurrentTempTextView.text = "${viewModel.convertCelsiusToFahrenheit(data.main.currentTemp)}°"
         binding.detailWeatherConditionsTextView.text = data.weather[0].mainWeatherDescription
-        binding.detailMinMaxTempTextView.text = createMinMaxString(convertCelsiusToFahrenheit(data.main.minTemp), convertCelsiusToFahrenheit(data.main.maxTemp))
+        binding.detailMinMaxTempTextView.text = viewModel.createMinMaxString(viewModel.convertCelsiusToFahrenheit(data.main.minTemp), viewModel.convertCelsiusToFahrenheit(data.main.maxTemp))
         binding.detailHumidityCurrentTextTextView.text = "${data.main.humidity}%"
         binding.detailWindSpeedValueTextView.text = "${data.wind.speed} MPH"
         binding.detailPressureValueTextView.text = "${data.main.pressure} hPa"
-        binding.detailSunriseValueTextView.text = convertTimeStampToDate(data.sys.sunrise, data.timezone)
-        binding.detailSunsetValueTextView.text = convertTimeStampToDate(data.sys.sunset, data.timezone)
+        binding.detailSunriseValueTextView.text = viewModel.convertTimeStampToDate(data.sys.sunrise, data.timezone)
+        binding.detailSunsetValueTextView.text = viewModel.convertTimeStampToDate(data.sys.sunset, data.timezone)
         toggleViews(shouldDisplay = true)
     }
 }

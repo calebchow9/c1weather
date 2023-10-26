@@ -40,6 +40,10 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -62,6 +66,10 @@ dependencies {
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.13.6")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("org.mockito:mockito-core:3.+")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }

@@ -14,7 +14,7 @@ import org.junit.Test
 
 class WeatherDataCacheUnitTest {
     @Test
-    fun `test CityDetailsDataCache to network model`() {
+    fun `convert CityDetailsDataCache cached model to network model`() {
         val expected = CityWeatherResponse(
             id = 1111,
             name = "San Francisco",
@@ -30,7 +30,7 @@ class WeatherDataCacheUnitTest {
     }
 
     @Test
-    fun `test GroupCityDataCache to network model`() {
+    fun `convert GroupCityDataCache cached model to network model`() {
         val expected = WeatherData(
             id = 1234,
             name = "McLean",

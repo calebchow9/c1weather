@@ -37,7 +37,7 @@ class WeatherDetailsViewModelUnitTest {
     }
 
     @Test
-    fun `test viewModel getWeatherFromRepository with successful resposne`() = runTest {
+    fun `viewModel correctly refreshed city weather from repository`() = runTest {
         Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
         val expected: NetworkState<CityWeatherResponse> = NetworkState.Success(result = FakeItems().defaultCityWeatherResponse)
         coEvery { repository.refreshCityWeather(any()) } answers {
@@ -49,7 +49,7 @@ class WeatherDetailsViewModelUnitTest {
     }
 
     @Test
-    fun `test viewModel getWeatherFromRepository with error response`() = runTest {
+    fun `viewModel refreshed city weather from repository and received error`() = runTest {
         Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
         val expected: NetworkState<CityWeatherResponse> = NetworkState.Error(message = "Response.error()")
         coEvery { repository.refreshCityWeather(any()) } answers {
@@ -61,7 +61,7 @@ class WeatherDetailsViewModelUnitTest {
     }
 
     @Test
-    fun `test WeatherDetailsViewModel factory successful viewModel creation`() {
+    fun `viewModelFactory successful viewModel creation`() {
         val testViewModel = WeatherDetailsViewModelFactory(repository).create(WeatherDetailsViewModel::class.java)
 
         Assert.assertNotNull(testViewModel)
@@ -69,7 +69,7 @@ class WeatherDetailsViewModelUnitTest {
     }
 
     @Test
-    fun `test WeatherDetailsViewModel factory error viewModel creation`() {
+    fun `viewModelFactory error viewModel creation`() {
         Assert.assertThrows(IllegalArgumentException::class.java) {
             WeatherDetailsViewModelFactory(repository).create(
                 CityPickerViewModel::class.java
@@ -78,19 +78,19 @@ class WeatherDetailsViewModelUnitTest {
     }
 
     @Test
-    fun `test converting 23 celsius to fahrenheit`() {
+    fun `convert 23 celsius to fahrenheit successfully`() {
         val expected = 73 // 73.4 but rounded to nearest Int
         assertEquals(expected, viewModel.convertCelsiusToFahrenheit(23.0))
     }
 
     @Test
-    fun `test creating MinMax string`() {
+    fun `create MinMax string successfully`() {
         val expected = "32°/64°"
         assertEquals(expected, viewModel.createMinMaxString(32, 64))
     }
 
     @Test
-    fun `test convert millisecond timestamp to date`() {
+    fun `convert millisecond timestamp to date successfully`() {
         val expected = "2:47 AM"
         assertEquals(expected, viewModel.convertTimeStampToDate(1698173693272, 0))
     }

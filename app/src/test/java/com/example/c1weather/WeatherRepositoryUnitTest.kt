@@ -25,8 +25,13 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.runs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.Assert.*
@@ -53,7 +58,14 @@ class WeatherRepositoryUnitTest {
     }
 
     @Test
-    fun `test repository refreshWeather with successful response`() = runBlocking {
+    fun `repository sets loading states initially`() = runTest {
+        val expected: NetworkState.Loading = NetworkState.Loading
+        assertEquals(expected, repository.groupState.value)
+        assertEquals(expected, repository.cityState.value)
+    }
+
+    @Test
+    fun `repository refreshed group weather data correctly`() = runBlocking {
         val testSuccessfulResponse: Response<WeatherResponse> = Response.success(WeatherResponse())
         val expected: NetworkState<List<WeatherData>> = NetworkState.Success(result = listOf())
         coEvery { WeatherApi.retrofitService.getWeather(GROUP_CITY_IDS, API_KEY, UNITS) } returns testSuccessfulResponse
@@ -63,7 +75,7 @@ class WeatherRepositoryUnitTest {
     }
 
     @Test
-    fun `test repository refreshWeather with error response and empty cache`() = runBlocking {
+    fun `repository refreshed group weather data with error and empty cache`() = runBlocking {
         val testErrorResponse: Response<WeatherResponse> = Response.error(404, ResponseBody.create(
             MediaType.parse("application/json"),
             "{\"key\":[\"error\"]}"
@@ -77,7 +89,7 @@ class WeatherRepositoryUnitTest {
     }
 
     @Test
-    fun `test repository refreshWeather with error response but filled cache`() = runBlocking {
+    fun `repository refreshed group weather data with error but filled cache`() = runBlocking {
         val testErrorResponse: Response<WeatherResponse> = Response.error(404, ResponseBody.create(
             MediaType.parse("application/json"),
             "{\"key\":[\"error\"]}"
@@ -92,7 +104,7 @@ class WeatherRepositoryUnitTest {
     }
 
     @Test
-    fun `test repository refreshCityWeather with successful response`() = runBlocking {
+    fun `repository correctly refreshed city weather data`() = runBlocking {
         val testSuccessfulResponse: Response<CityWeatherResponse> = Response.success(FakeItems().defaultCityWeatherResponse)
         val expected: NetworkState<CityWeatherResponse> = NetworkState.Success(result = FakeItems().defaultCityWeatherResponse)
         coEvery { WeatherApi.retrofitService.getCityWeather(any(), API_KEY, UNITS) } returns testSuccessfulResponse
@@ -102,7 +114,7 @@ class WeatherRepositoryUnitTest {
     }
 
     @Test
-    fun `test repository refreshCityWeather with error response and empty cache`() = runBlocking {
+    fun `repository refreshed city weather data with error and empty cache`() = runBlocking {
         val testErrorResponse: Response<CityWeatherResponse> = Response.error(404, ResponseBody.create(
             MediaType.parse("application/json"),
             "{\"key\":[\"error\"]}"
@@ -115,7 +127,7 @@ class WeatherRepositoryUnitTest {
     }
 
     @Test
-    fun `test repository refreshCityWeather with error response but filled cache`() = runBlocking {
+    fun `repository refreshed city weather data with error but filled cache`() = runBlocking {
         val testErrorResponse: Response<CityWeatherResponse> = Response.error(404, ResponseBody.create(
             MediaType.parse("application/json"),
             "{\"key\":[\"error\"]}"

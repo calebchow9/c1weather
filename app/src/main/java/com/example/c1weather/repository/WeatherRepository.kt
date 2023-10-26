@@ -18,9 +18,9 @@ import retrofit2.HttpException
 
 class WeatherRepository(private val database: AppDatabase) {
     // Use backing to protect private ViewModel variables
-    private val _groupState = MutableLiveData<NetworkState<List<WeatherData>>>()
+    private val _groupState: MutableLiveData<NetworkState<List<WeatherData>>> = MutableLiveData(NetworkState.Loading)
     val groupState: LiveData<NetworkState<List<WeatherData>>> = _groupState
-    private val _cityState = MutableLiveData<NetworkState<CityWeatherResponse>>()
+    private val _cityState: MutableLiveData<NetworkState<CityWeatherResponse>> = MutableLiveData(NetworkState.Loading)
     val cityState: LiveData<NetworkState<CityWeatherResponse>> = _cityState
 
     private fun getNetworkGroupWeather(): List<WeatherData> {

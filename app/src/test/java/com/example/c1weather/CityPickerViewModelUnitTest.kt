@@ -39,7 +39,7 @@ class CityPickerViewModelUnitTest {
     }
 
     @Test
-    fun `test viewModel getWeatherFromRepository with successful response`() = runTest {
+    fun `viewModel correctly refreshed group weather from repository`() = runTest {
         Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
         val expected: NetworkState<List<WeatherData>> = NetworkState.Success(result = listOf())
         coEvery { repository.refreshWeather() } answers {
@@ -51,7 +51,7 @@ class CityPickerViewModelUnitTest {
     }
 
     @Test
-    fun `test viewModel getWeatherFromRepository with error response`() = runTest {
+    fun `viewModel refreshed group weather from repository with error`() = runTest {
         Dispatchers.setMain(UnconfinedTestDispatcher(testScheduler))
         val expected: NetworkState<List<WeatherData>> = NetworkState.Error(message = "Response.error()")
         coEvery { repository.refreshWeather() } answers {
@@ -63,7 +63,7 @@ class CityPickerViewModelUnitTest {
     }
 
     @Test
-    fun `test CityPickerViewModel factory successful viewModel creation`() {
+    fun `viewModelFactory successful viewModel creation`() {
         val testViewModel = CityPickerViewModelFactory(repository).create(CityPickerViewModel::class.java)
 
         assertNotNull(testViewModel)
@@ -71,7 +71,7 @@ class CityPickerViewModelUnitTest {
     }
 
     @Test
-    fun `test CityPickerViewModel factory error viewModel creation`() {
+    fun `viewModelFactory error viewModel creation`() {
         assertThrows(IllegalArgumentException::class.java) {
             CityPickerViewModelFactory(repository).create(
                 WeatherDetailsViewModel::class.java

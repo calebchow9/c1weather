@@ -7,7 +7,7 @@ import org.junit.Test
 
 class WeatherDataUnitTest {
     @Test
-    fun `test CityWeatherResponse to cached model`() {
+    fun `convert CityWeatherResponse network model to cached model`() {
         val expected = CityDetailDataCache(
             id = 123123,
             cityName = "Chicago",
@@ -27,7 +27,7 @@ class WeatherDataUnitTest {
     }
 
     @Test
-    fun `test WeatherResponse to cached model`() {
+    fun `convert WeatherResponse network model to cached model`() {
         val expected = listOf(
             GroupCityDataCache(
                 id = 123123,
